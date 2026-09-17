@@ -1,10 +1,13 @@
 * { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, sans-serif; background: #0b1a3a; color: #fff; }
-button { font: inherit; padding: .5em 1em; border: 0; border-radius: .4em; background: #2a4a8a; color: #fff; cursor: pointer; margin: .2em; }
+:root { --bg: #0b1a3a; --fg: #fff; --panel: #12244f; --panel2: #071230; --btn: #2a4a8a; --tile: #1c3a7a; --tile-fg: #cfd8ea; --border: #446; }
+body.light { --bg: #f4f6fb; --fg: #111; --panel: #fff; --panel2: #e6ebf5; --btn: #3b62b8; --tile: #d5deef; --tile-fg: #223; --border: #bbc; }
+body { margin: 0; font-family: system-ui, sans-serif; background: var(--bg); color: var(--fg); }
+button { font: inherit; padding: .5em 1em; border: 0; border-radius: .4em; background: var(--btn); color: #fff; cursor: pointer; margin: .2em; }
 button.ok { background: #1f9d55; }
 button.ko { background: #c0392b; }
 button.danger { background: #555; }
-input, select { font: inherit; padding: .4em; border-radius: .3em; border: 1px solid #446; background: #12244f; color: #fff; }
+button.theme { font-size: .5em; vertical-align: middle; margin-left: 1em; }
+input, select { font: inherit; padding: .4em; border-radius: .3em; border: 1px solid var(--border); background: var(--panel); color: var(--fg); }
 
 /* rosco ring */
 .rosco { position: relative; margin: auto; }
@@ -12,7 +15,7 @@ input, select { font: inherit; padding: .4em; border-radius: .3em; border: 1px s
   position: absolute; transform: translate(-50%, -50%);
   width: 2.2em; height: 2.2em; border-radius: 50%;
   display: grid; place-items: center; font-weight: 700;
-  background: #1c3a7a; color: #cfd8ea; transition: background .2s, transform .2s;
+  background: var(--tile); color: var(--tile-fg); transition: background .2s, transform .2s;
 }
 .letter.correct { background: #1f9d55; color: #fff; }
 .letter.wrong { background: #c0392b; color: #fff; }
@@ -26,13 +29,13 @@ input, select { font: inherit; padding: .4em; border-radius: .3em; border: 1px s
 .center .player { font-size: 5vmin; font-weight: 700; }
 .center .score { font-size: 8vmin; font-weight: 800; }
 .ok { color: #2ecc71; } .ko { color: #e74c3c; }
-.question { width: 100%; padding: 2vmin 6vmin 4vmin; text-align: center; background: #071230; }
+.question { width: 100%; padding: 2vmin 6vmin 4vmin; text-align: center; background: var(--panel2); }
 .question .hint { font-size: 3vmin; opacity: .8; }
 .question .text { font-size: 4.5vmin; line-height: 1.3; }
 
 /* admin */
 .admin { max-width: 1000px; margin: auto; padding: 1em; }
-.admin section { background: #12244f; border-radius: .6em; padding: 1em; margin-bottom: 1em; }
+.admin section { background: var(--panel); border-radius: .6em; padding: 1em; margin-bottom: 1em; }
 .admin .control { display: flex; gap: 2em; align-items: center; flex-wrap: wrap; }
 .admin .control > div { flex: 1; min-width: 300px; }
 .admin .big { font-size: 1.5em; }

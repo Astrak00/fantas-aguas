@@ -4,11 +4,15 @@ import { api } from "../convex/_generated/api";
 import type { Doc, Id } from "../convex/_generated/dataModel";
 import Rosco from "./Rosco";
 
+const LETTERS = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ".split("");
+
 export default function Admin() {
   const [editing, setEditing] = useState<Id<"roscos"> | null>(null);
+  const light = useQuery(api.settings.get)?.light;
+  const toggleLight = useMutation(api.settings.toggleLight);
   return (
     <div className="admin">
-      <h1>Pasapalabra · Admin</h1>
+      <h1>Pasapalabra · Admin <button className="theme" onClick={() => toggleLight()}>{light ? "🌙 Modo oscuro" : "☀️ Modo claro"}</button></h1>
       {editing ? <Editor id={editing} onClose={() => setEditing(null)} /> : <>
         <GameControl />
         <RoscoList onEdit={setEditing} />
@@ -103,12 +107,19 @@ function EditorForm({ rosco, onClose }: { rosco: Doc<"roscos">; onClose: () => v
   const [questions, setQuestions] = useState(rosco.questions);
   const set = (i: number, patch: Partial<Doc<"roscos">["questions"][number]>) =>
     setQuestions((qs) => qs.map((q, j) => (j === i ? { ...q, ...patch } : q)));
+  const used = new Set(questions.map((q) => q.letter));
+  const free = LETTERS.filter((l) => !used.has(l));
+  const add = (letters: string[]) =>
+    setQuestions((qs) =>
+      [...qs, ...letters.map((letter) => ({ letter, mode: "starts" as const, question: "", answer: "" }))]
+        .sort((a, b) => LETTERS.indexOf(a.letter) - LETTERS.indexOf(b.letter)),
+    );
 
   return (
     <section>
       <input className="title" value={name} onChange={(e) => setName(e.target.value)} />
       <table>
-        <thead><tr><th></th><th>Tipo</th><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <thead><tr><th></th><th>Tipo</th><th>Pregunta</th><th>Respuesta</th><th></th></tr></thead>
         <tbody>
           {questions.map((q, i) => (
             <tr key={q.letter}>
@@ -121,10 +132,20 @@ function EditorForm({ rosco, onClose }: { rosco: Doc<"roscos">; onClose: () => v
               </td>
               <td><input value={q.question} onChange={(e) => set(i, { question: e.target.value })} /></td>
               <td><input value={q.answer} onChange={(e) => set(i, { answer: e.target.value })} /></td>
+              <td><button className="danger" onClick={() => setQuestions((qs) => qs.filter((_, j) => j !== i))}>✕</button></td>
             </tr>
           ))}
         </tbody>
       </table>
+      {free.length > 0 && (
+        <div className="buttons">
+          <select value="" onChange={(e) => e.target.value && add([e.target.value])}>
+            <option value="">+ Añadir letra</option>
+            {free.map((l) => <option key={l} value={l}>{l}</option>)}
+          </select>
+          <button onClick={() => add(free)}>Añadir todas</button>
+        </div>
+      )}
       <div className="buttons">
         <button className="ok" onClick={async () => { await update({ id: rosco._id, name, questions }); onClose(); }}>Guardar</button>
         <button onClick={onClose}>Cancelar</button>

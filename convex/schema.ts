@@ -21,4 +21,5 @@ export default defineSchema({
     results: v.array(result),
     current: v.number(),
   }),
+  settings: defineTable({ light: v.boolean() }),
 });

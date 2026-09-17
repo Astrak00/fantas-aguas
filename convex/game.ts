@@ -21,6 +21,7 @@ export const start = mutation({
   handler: async (ctx, { roscoId, player }) => {
     const rosco = await ctx.db.get(roscoId);
     if (!rosco) throw new Error("Rosco not found");
+    if (rosco.questions.length === 0) throw new Error("Rosco has no letters");
     await ctx.db.insert("games", {
       roscoId,
       player,
