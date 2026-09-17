@@ -11,4 +11,7 @@ npm run dev      # vite
 ```
 
 ## Deploy
-Vercel builds with `npx convex deploy --cmd 'npm run build'`; set `CONVEX_DEPLOY_KEY` (production deploy key from the Convex dashboard) in Vercel env vars.
+- Backend: `npx convex deploy` (pushes `convex/` to prod)
+- Frontend: push to `main` → Vercel builds with `VITE_CONVEX_URL` pointing at the prod deployment.
+
+To have Vercel deploy the backend too: create a production deploy key in the Convex dashboard, set it as `CONVEX_DEPLOY_KEY` in Vercel, and change the build command to `npx convex deploy --cmd 'npm run build'`.
